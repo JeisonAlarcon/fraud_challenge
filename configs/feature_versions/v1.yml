@@ -1,0 +1,124 @@
+target: fraude
+timestamp: fecha
+features:
+  - name: a
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: b
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    reason: "~8.7% nulos observados; se preserva senal de missingness"
+    transforms:
+      [missing_indicator, median_imputer, clip_quantiles, robust_scaler]
+
+  - name: c
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    reason: "~8.7% nulos observados; se preserva senal de missingness"
+    transforms:
+      [missing_indicator, median_imputer, clip_quantiles, robust_scaler]
+
+  - name: d
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    reason: "~0.24% nulos observados"
+    transforms:
+      [missing_indicator, median_imputer, clip_quantiles, robust_scaler]
+
+  - name: e
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: f
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: g
+    enabled: true
+    role: categorical_low
+    availability: pre_decision
+    reason: "51 categorias observadas"
+    transforms: [missing_token, rare_category, one_hot]
+
+  - name: h
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: j
+    enabled: true
+    role: categorical_high
+    availability: pre_decision
+    reason: "8324 categorias observadas; alta cardinalidad"
+    transforms: [missing_token, target_encoder_oof, standard_scaler]
+
+  - name: k
+    enabled: true
+    role: numeric # id_like
+    availability: pre_decision
+    reason: "Decimal continuo en [0,1] con 150000 valores unicos por precision; no es un identificador. PR-AUC 0.0503, Pearson +0.002 y PSI 0.0003."
+    transforms: [median_imputer, clip_quantiles, robust_scaler] # drop
+
+  - name: l
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: m
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    reason: "~0.24% nulos observados"
+    transforms:
+      [missing_indicator, median_imputer, clip_quantiles, robust_scaler]
+
+  - name: n
+    enabled: true
+    role: binary
+    availability: pre_decision
+    reason: "EDA confirmo cardinalidad=2 y 0% nulos; es una bandera binaria, no numerica continua"
+    transforms: [passthrough]
+
+  - name: o
+    enabled: true
+    role: binary
+    availability: pre_decision
+    reason: "~72.6% nulos observados (Y/N/nulo)"
+    transforms: [missing_as_category, explicit_binary_map]
+
+  - name: p
+    enabled: true
+    role: binary
+    availability: pre_decision
+    transforms: [explicit_binary_map]
+
+  - name: monto
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    transforms: [median_imputer, clip_quantiles, log1p, robust_scaler]
+
+  - name: score
+    enabled: true
+    role: numeric
+    availability: pre_decision
+    reason: "EDA real: PR-AUC univariado 0.176 (mas del doble del siguiente feature), Cramer's/Pearson mas alto de todos, y tasa de fraude NO monotonica por decil (cae a ~0.3% en deciles medios y sube a 21.8% en el top decile). Patron consistente con un score de motor de riesgo pre-existente; falta confirmar con negocio que estuvo disponible ANTES de la decision."
+    transforms: [median_imputer, clip_quantiles, robust_scaler]
+
+  - name: fecha
+    enabled: true
+    role: datetime
+    availability: pre_decision
+    transforms: [hour, day_of_week, is_weekend, cyclic_hour, cyclic_day]

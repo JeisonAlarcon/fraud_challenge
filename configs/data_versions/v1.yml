@@ -1,0 +1,68 @@
+version: v1
+source:
+  filename: fraud_dataset_2026_.csv
+
+target:
+  column: fraude
+  allowed_values: [0, 1]
+
+timestamp:
+  column: fecha
+  format: "%Y-%m-%d %H:%M:%S"
+
+columns:
+  expected:
+    [a, b, c, d, e, f, g, h, j, k, l, m, n, o, p, fecha, monto, score, fraude]
+  dtypes:
+    a: int64
+    b: float64
+    c: float64
+    d: int64
+    e: float64
+    f: int64
+    g: category
+    h: int64
+    j: category
+    k: float64
+    l: int64
+    m: int64
+    n: int64
+    o: category
+    p: category
+    fecha: datetime
+    monto: float64
+    score: int64
+    fraude: int64
+
+validation_rules:
+  duplicates:
+    check: true
+    subset: null
+  nulls:
+    max_null_fraction:
+      o: 0.80
+      b: 0.12
+      c: 0.12
+      d: 0.01
+      m: 0.01
+      # f/g/l: nulos minimos (~0.01-0.13%) detectados en la corrida real del EDA,
+      # no anticipados en el preview original del plan. Tolerancia generosa (0.5%)
+      # para no bloquear el congelamiento por ruido esperable en datos reales.
+      f: 0.005
+      g: 0.005
+      l: 0.005
+  ranges:
+    monto: { min: 0 }
+    score: { min: 0, max: 100 }
+    k: { min: 0, max: 1 }
+    fraude: { values: [0, 1] }
+
+split:
+  strategy: temporal
+  order_by: fecha
+  validation_days: 7
+  test_days: 7
+  entity_column: null
+
+manifest:
+  clean_parquet_name: fraud_clean_v1.parquet

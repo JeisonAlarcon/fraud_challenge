@@ -1,0 +1,7 @@
+# Politica de metricas por experimento: no cambia features ni hiperparametros de entrenamiento.
+metrics:
+  every_n_epochs: 1 # ponytail: no wireado aun (se calcula cada epoch); wire si el costo de compute() domina el tiempo de entrenamiento.
+  thresholds: [0.10, 0.25, 0.50, 0.75, 0.90]
+  top_k_percent: [0.5, 1, 2, 5, 10]
+  calibration_bins: 10
+  store_scores_by_epoch: true

@@ -1,0 +1,19 @@
+feature,decision,riesgo,evidencia
+a,incluir,bajo,4 valores únicos; tratar como variable discreta
+b,incluir,bajo,8.66% nulos; conservar indicador de missing
+c,incluir,bajo,8.66% nulos; conservar indicador de missing
+d,incluir,bajo,0.24% nulos
+e,incluir,bajo,sin nulos observados
+f,incluir,bajo,0.01% nulos; tolerancia del contrato
+g,incluir,bajo,51 categorías; agrupar cola larga
+h,incluir,bajo,59 valores; baja cardinalidad
+j,incluir,medio,"8,324 entidades; encoding OOF y control cold-start"
+k,incluir,medio,"float en [0, 1]; 150,000/150,000 valores únicos por precisión decimal; PR-AUC = 0.0503, PSI = 0.0003"
+l,incluir,bajo,0.01% nulos; asociación negativa con fraude
+m,incluir,bajo,0.24% nulos; asociación negativa con fraude
+n,incluir,bajo,binaria; usar passthrough o tratamiento explícito
+o,incluir,medio,0.00% nulos; missingness y Cramér's V informativos
+p,incluir,bajo,Cramér's V = 0.107
+monto,incluir,bajo,PR-AUC = 0.0729; tendencia interpretable
+score,investigar,alto,"PR-AUC = 0.1765; forma no monotónica y PSI = 0.0761 (estable, pero debe monitorearse)"
+fecha,incluir,bajo,define split y permite features cíclicas de calendario
