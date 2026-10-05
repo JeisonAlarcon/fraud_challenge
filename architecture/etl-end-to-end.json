@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "ETL de fraude · del CSV al scoring",
+    "output": "etl-end-to-end.html",
+    "quality_profile": "showcase",
+    "visual_preset": "editorial",
+    "legend": { "mode": "hidden" },
+    "viewBox": [1068, 580]
+  },
+  "stages": [
+    { "label": "Entrada y contratos" },
+    { "label": "Dataset" },
+    { "label": "Features" },
+    { "label": "Entrenamiento" },
+    { "label": "Promoción e inferencia" }
+  ],
+  "nodes": [
+    {
+      "id": "raw-csv",
+      "type": "external",
+      "label": "CSV crudo",
+      "sublabel": "FRAUD_DATA_ROOT/raw/*.csv",
+      "tag": "raw",
+      "width": 150,
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "dataset-builder",
+      "type": "backend",
+      "label": "DatasetBuilder",
+      "sublabel": "valida · deduplica · divide",
+      "tag": "VALID/TEST: 7 días",
+      "width": 150,
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "clean-parquet",
+      "type": "database",
+      "label": "Parquet + manifest",
+      "sublabel": "fraud_clean_v1.parquet",
+      "tag": "splits · hashes",
+      "width": 150,
+      "stage": 1,
+      "row": 1
+    },
+    {
+      "id": "feature-spec",
+      "type": "external",
+      "label": "Features v1",
+      "sublabel": "roles · transforms por columna",
+      "tag": "feature_versions/v1.yml",
+      "width": 150,
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "feature-cache",
+      "type": "database",
+      "label": "Feature cache",
+      "sublabel": "fit TRAIN · transforma splits",
+      "tag": "X/y · preprocessor.pkl",
+      "width": 150,
+      "stage": 2,
+      "row": 1
+    },
+    {
+      "id": "experiment-config",
+      "type": "external",
+      "label": "Config. experimentos",
+      "sublabel": "model/feature v1 · HP v2 · seed 42",
+      "tag": "YAML versionados",
+      "width": 150,
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "runner-models",
+      "type": "cloud",
+      "label": "ExperimentRunner",
+      "sublabel": "10 modelos · early stopping VALID",
+      "tag": "baselines · GBM · redes · ensembles",
+      "width": 150,
+      "stage": 3,
+      "row": 1
+    },
+    {
+      "id": "run-artifacts",
+      "type": "database",
+      "label": "Run artifacts",
+      "sublabel": "artifacts/runs/<run_id>/",
+      "tag": "modelo · métricas · scores",
+      "width": 150,
+      "stage": 3,
+      "row": 2
+    },
+    {
+      "id": "promotion",
+      "type": "security",
+      "label": "Promoción",
+      "sublabel": "PR-AUC VALID · calibración",
+      "tag": "TEST una vez · promote_winner.py",
+      "width": 150,
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "promoted-bundle",
+      "type": "database",
+      "label": "Bundle ONNX",
+      "sublabel": "modelo + calibrador ONNX",
+      "tag": "preprocessor · contracts",
+      "width": 150,
+      "stage": 4,
+      "row": 1
+    },
+    {
+      "id": "onnx-scorer",
+      "type": "frontend",
+      "label": "OnnxScorer",
+      "sublabel": "valida + preprocesa",
+      "tag": "probabilidad + decisión/umbral",
+      "width": 150,
+      "stage": 4,
+      "row": 2
+    }
+  ],
+  "flows": [
+    {
+      "id": "csv-to-build",
+      "from": "raw-csv",
+      "to": "dataset-builder",
+      "label": "CSV",
+      "variant": "emphasis"
+    },
+    {
+      "id": "build-to-parquet",
+      "from": "dataset-builder",
+      "to": "clean-parquet",
+      "label": "Parquet",
+      "labelAt": [315, 200]
+    },
+    {
+      "id": "parquet-to-cache",
+      "from": "clean-parquet",
+      "to": "feature-cache",
+      "label": "filas por split",
+      "labelAt": [423, 314]
+    },
+    {
+      "id": "spec-to-cache",
+      "from": "feature-spec",
+      "to": "feature-cache",
+      "label": "spec",
+      "labelAt": [530, 200]
+    },
+    {
+      "id": "cache-to-runner",
+      "from": "feature-cache",
+      "to": "runner-models",
+      "label": "X/y",
+      "variant": "emphasis"
+    },
+    {
+      "id": "config-to-runner",
+      "from": "experiment-config",
+      "to": "runner-models",
+      "label": "HP + seed",
+      "labelAt": [745, 200]
+    },
+    {
+      "id": "runner-to-artifacts",
+      "from": "runner-models",
+      "to": "run-artifacts",
+      "label": "scores VALID",
+      "labelAt": [745, 314],
+      "variant": "emphasis"
+    },
+    {
+      "id": "artifacts-to-promotion",
+      "from": "run-artifacts",
+      "to": "promotion",
+      "label": "rank VALID",
+      "variant": "emphasis"
+    },
+    {
+      "id": "promotion-to-bundle",
+      "from": "promotion",
+      "to": "promoted-bundle",
+      "label": "export ONNX",
+      "labelAt": [960, 200],
+      "variant": "emphasis"
+    },
+    {
+      "id": "bundle-to-scorer",
+      "from": "promoted-bundle",
+      "to": "onnx-scorer",
+      "label": "carga bundle",
+      "labelAt": [960, 314]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Configuración",
+      "items": [
+        "data_versions/v1.yml: contrato + split temporal de 7 días. feature_versions/v1.yml: roles, disponibilidad y transforms (log1p, one-hot, OOF, cíclicas).",
+        "HP/modelo: CatBoost d5/lr .01; DCN-V2 3 capas/rank32/batch1024/80 ep. Runner: model/feature v1, HP v2, seed 42."
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Métricas y artefactos",
+      "items": [
+        "experiments/v1.yml: PR-AUC/ROC-AUC, KS/Gini, log-loss, Brier/ECE, threshold/top-k por época.",
+        "Parquet + manifest; cache X/y + preprocessor.pkl. runs/<id>: modelo/métricas/scores; promoted/<id>: ONNX, contratos, TEST, Model Card."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Validación y consumo",
+      "items": [
+        "promotion/v1.yml: mejor PR-AUC VALID, calibración y umbral; TEST se mide una vez.",
+        "OnnxScorer: raw → preprocesador → modelo → calibrador → decisión. Manual: notebooks 01/02 → promote_winner.py."
+      ]
+    }
+  ]
+}

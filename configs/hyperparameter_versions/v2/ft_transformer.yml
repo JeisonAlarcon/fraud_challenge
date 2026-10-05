@@ -1,0 +1,16 @@
+parameters:
+  token_dim: 32
+  n_transformer_layers: 3
+  n_heads: 8
+  ffn_dim: 128
+  attn_dropout: 0.1
+trainer:
+  batch_size: 512
+  max_epochs: 60
+  optimizer: adamw
+  learning_rate: 0.0005
+  weight_decay: 0.00001
+  pos_weight: balanced
+  early_stopping: { monitor: valid.average_precision, patience: 8, mode: max }
+  # patience mas corta que en mlp/dcnv2: cada epoch aca tarda ~66s, conviene bajar el LR antes.
+  lr_scheduler: { factor: 0.5, patience: 4, min_lr: 0.000001 }

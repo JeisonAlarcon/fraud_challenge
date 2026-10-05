@@ -1,0 +1,13 @@
+# v2: retune tras observar en v1 que paraba por overfitting detector en la iteracion ~171 de 2000
+# (learning_rate=0.03 + auto_class_weights=Balanced convergia/sobreajustaba muy rapido). Baja LR,
+# sube regularizacion (l2_leaf_reg, bagging_temperature) y da mas margen al early stopping.
+parameters:
+  iterations: 3000
+  depth: 5
+  learning_rate: 0.01
+  l2_leaf_reg: 8.0
+  auto_class_weights: Balanced
+  bagging_temperature: 0.5
+trainer:
+  early_stopping_rounds: 150
+  use_best_model: true

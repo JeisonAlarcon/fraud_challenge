@@ -1,0 +1,12 @@
+parameters:
+  hidden_layers: [256, 128, 64]
+  dropout: 0.2
+  batch_norm: true
+trainer:
+  batch_size: 512
+  max_epochs: 100
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  pos_weight: balanced
+  early_stopping: { monitor: valid.average_precision, patience: 10, mode: max }

@@ -1,0 +1,13 @@
+parameters:
+  cross_layers: 3
+  low_rank: 32
+  deep_layers: [256, 128]
+  dropout: 0.15
+trainer:
+  batch_size: 1024
+  max_epochs: 80
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  pos_weight: balanced
+  early_stopping: { monitor: valid.average_precision, patience: 10, mode: max }

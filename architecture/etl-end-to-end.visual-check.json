@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "visual-check",
+  "evidenceKind": "automated-browser",
+  "status": "fail",
+  "visualReview": "pending",
+  "artifact": {
+    "path": "/Users/jeialarcon/Downloads/Fraud/fraud_challenge_2026/architecture/etl-end-to-end.html",
+    "sha256": "8fc0afb63791e1ea87983207ba0ddf1a0e0deab4cd80144113a3e9fe63380f31",
+    "bytes": 815415
+  },
+  "state": {
+    "detail": "read",
+    "motion": "still"
+  },
+  "chrome": {
+    "status": "available",
+    "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  },
+  "diagnostics": [
+    {
+      "code": "viewer/visual-check-runtime",
+      "severity": "error",
+      "message": "visual-check could not complete its Chrome inspection.",
+      "subject": {
+        "artifact": "/Users/jeialarcon/Downloads/Fraud/fraud_challenge_2026/architecture/etl-end-to-end.html"
+      },
+      "evidence": {
+        "reason": "Chrome DevTools process exit failed: Chrome closed with signal SIGABRT\nChrome process: signal SIGABRT."
+      },
+      "supportedFixes": [
+        "resolve the reported Chrome inspection error, then rerun visual-check"
+      ]
+    }
+  ],
+  "containment": {
+    "status": "fail",
+    "viewports": []
+  },
+  "readability": {
+    "status": "fail",
+    "minimumProjectedNodeTextPx": 6,
+    "viewports": []
+  },
+  "viewerChrome": {
+    "status": "fail",
+    "viewports": []
+  },
+  "captures": {
+    "status": "fail",
+    "screenshots": [],
+    "contactSheet": null
+  },
+  "sidecars": {
+    "receipt": "etl-end-to-end.visual-check.json",
+    "contactSheet": "etl-end-to-end.visual-check.html"
+  },
+  "error": "Chrome DevTools process exit failed: Chrome closed with signal SIGABRT\nChrome process: signal SIGABRT."
+}

@@ -1,0 +1,17 @@
+parameters:
+  estimators: [logistic_regression, hist_gradient_boosting, catboost]
+  final_estimator: logistic_regression
+  cv: 5
+  # v2: mismo catboost tuneado que en voting_ensemble.yml v2
+  estimator_hyperparameters:
+    catboost:
+      parameters:
+        iterations: 3000
+        depth: 5
+        learning_rate: 0.01
+        l2_leaf_reg: 8.0
+        auto_class_weights: Balanced
+        bagging_temperature: 0.5
+      trainer:
+        early_stopping_rounds: 150
+        use_best_model: true

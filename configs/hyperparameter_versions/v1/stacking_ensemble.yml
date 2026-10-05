@@ -1,0 +1,4 @@
+parameters:
+  estimators: [logistic_regression, hist_gradient_boosting, catboost]
+  final_estimator: logistic_regression
+  cv: 5

@@ -1,0 +1,22 @@
+parameters:
+  estimators: [logistic_regression, hist_gradient_boosting, catboost]
+  voting: soft
+  # v2: los pesos ya NO se configuran a mano. VotingEnsembleModel los calcula el mismo, en su
+  # propio fit(), a partir del PR-AUC de cada miembro ya entrenado sobre VALID (ver
+  # ensemble.py::VotingEnsembleModel._fit_estimator). Quedan expuestos despues del entrenamiento
+  # en metrics/epoch_metrics.json (clave "final" -> "voting_weights") y en el Model Card final.
+  #
+  # Retunear catboost (ver hyperparameter_versions/v2/catboost.yml) SI se refleja en el miembro
+  # interno de este ensamble, a diferencia de v1: estimator_hyperparameters lo pasa explicito.
+  estimator_hyperparameters:
+    catboost:
+      parameters:
+        iterations: 3000
+        depth: 5
+        learning_rate: 0.01
+        l2_leaf_reg: 8.0
+        auto_class_weights: Balanced
+        bagging_temperature: 0.5
+      trainer:
+        early_stopping_rounds: 150
+        use_best_model: true

@@ -1,0 +1,15 @@
+parameters:
+  hidden_layers: [256, 128, 64]
+  dropout: 0.2
+  batch_norm: true
+trainer:
+  batch_size: 512
+  max_epochs: 100
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  pos_weight: balanced
+  early_stopping: { monitor: valid.average_precision, patience: 10, mode: max }
+  # v2: LR adaptativo (patience menor a la de early_stopping, para que el LR baje antes de
+  # rendirse del todo) - reduce a la mitad si valid PR-AUC no mejora en 5 epochs.
+  lr_scheduler: { factor: 0.5, patience: 5, min_lr: 0.000001 }

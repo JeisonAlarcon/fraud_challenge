@@ -1,0 +1,18 @@
+# Política económica del challenge para fraud-promote-winner. La ganancia se calcula por
+# monto en VALID y el threshold congelado se evalúa después una única vez en TEST.
+policy:
+  type: economic_profit
+  params:
+    legitimate_gain_rate: 0.25
+    fraud_loss_rate: 1.0
+  defined_by: challenge_statement
+
+selection:
+  min_segment_support: 30
+  segment_columns: [g, o, p]
+  bootstrap_n: 1000
+  bootstrap_alpha: 0.05
+  temporal_window: 7D
+
+calibration:
+  method: auto # auto | platt | temperature | isotonic

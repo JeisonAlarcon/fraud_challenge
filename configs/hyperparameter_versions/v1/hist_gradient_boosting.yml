@@ -1,0 +1,7 @@
+parameters:
+  max_iter: 300
+  learning_rate: 0.05
+  max_leaf_nodes: 31
+  class_weight: balanced
+  early_stopping: true
+  n_iter_no_change: 20

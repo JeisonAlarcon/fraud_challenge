@@ -1,0 +1,3 @@
+parameters:
+  estimators: [logistic_regression, hist_gradient_boosting, catboost]
+  voting: soft

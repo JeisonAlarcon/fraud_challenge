@@ -1,0 +1,9 @@
+parameters:
+  iterations: 2000
+  depth: 6
+  learning_rate: 0.03
+  l2_leaf_reg: 3.0
+  auto_class_weights: Balanced
+trainer:
+  early_stopping_rounds: 100
+  use_best_model: true
